@@ -18,13 +18,29 @@ const {
 })
 
 const App = () => {
+  const [value, setValue] = React.useState(0)
+
   return (
-    <TimerComponent
-      labels={{
-        minutes: 'min',
-        seconds: 's'
-      }}
-    />
+    <>
+      <TimerComponent
+        labels={{
+          minutes: 'min',
+          seconds: 'sec'
+        }}
+      />
+      <div>{value}</div>
+      <div>
+        <button disabled={!isTimerActive} onClick={startTimer}>
+          Start
+        </button>
+        <button disabled={isTimerActive} onClick={stopTimer}>
+          Stop
+        </button>
+        <button onClick={() => setValue(getCurrentTimeInSeconds())}>
+          get seconds
+        </button>
+      </div>
+    </>
   )
 }
 

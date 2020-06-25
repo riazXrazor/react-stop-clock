@@ -90,11 +90,10 @@ class ReactStopClock {
       new Date().toISOString()
     )
 
-  resetTimer = () =>
-    this.presistanceType.setItem(
-      `${this.key}-${this.id}`,
-      new Date().toISOString()
-    )
+  resetTimer = () => {
+    const d = new Date()
+    this.presistanceType.setItem(`${this.key}-${this.id}`, d.toISOString())
+  }
 
   getCurrentTimeInSeconds = () => {
     try {
