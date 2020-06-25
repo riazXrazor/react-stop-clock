@@ -8,7 +8,7 @@ import map from 'lodash/map'
 let defaultOptions = {
   id: 1,
   onTick: null,
-  presist: false,
+  presist: true,
   key: 'react-stop-clock',
   presistanceType: window.localStorage
 }
@@ -20,6 +20,9 @@ class ReactStopClock {
     this.presist = defaultOptions.presist
     this.key = defaultOptions.key
     this.presistanceType = defaultOptions.presistanceType
+    this._timer = null
+    this._start = 0
+    this._end = 0
   }
 
   TimerComponent = (props) => {
@@ -36,27 +39,26 @@ class ReactStopClock {
           )
         }
       }
-      console.log(t)
+      this._start = t
       return t
     })
     const [duration, setDuration] = useState({})
     useEffect(() => {
-      const timer = setInterval(
-        () =>
-          setDuration(() => {
-            const d = intervalToDuration({
-              start,
-              end: new Date()
-            })
-            if (this.onTick) {
-              this.onTick(d)
-            }
-            return d
-          }),
-        1000
-      )
+      this._timer = setInterval(() => {
+        setDuration(() => {
+          this._end = new Date()
+          const d = intervalToDuration({
+            start,
+            end: this._end
+          })
+          if (this.onTick) {
+            this.onTick(d)
+          }
+          return d
+        })
+      }, 1000)
       return () => {
-        clearInterval(timer)
+        clearInterval(this._timer)
       }
     }, [])
 
@@ -80,15 +82,27 @@ class ReactStopClock {
     )
   }
 
-  isTimerActive = () => !!this.presistanceType.getItem(`${this.key}-${this.id}`)
+  isTimerActive = () =>
+    this.presist
+      ? !!this.presistanceType.getItem(`${this.key}-${this.id}`)
+      : this._timer
 
-  stopTimer = () => this.presistanceType.removeItem(`${this.key}-${this.id}`)
+  stopTimer = () => {
+    clearInterval(this._timer)
+    if (this.presist) {
+      this.presistanceType.removeItem(`${this.key}-${this.id}`)
+    }
+  }
 
-  startTimer = () =>
-    this.presistanceType.setItem(
-      `${this.key}-${this.id}`,
-      new Date().toISOString()
-    )
+  startTimer = () => {
+    this._start = new Date()
+    if (this.presist) {
+      this.presistanceType.setItem(
+        `${this.key}-${this.id}`,
+        new Date().toISOString()
+      )
+    }
+  }
 
   resetTimer = () => {
     const d = new Date()
@@ -97,10 +111,7 @@ class ReactStopClock {
 
   getCurrentTimeInSeconds = () => {
     try {
-      const time = parseJSON(
-        this.presistanceType.getItem(`${this.key}-${this.id}`)
-      )
-      return differenceInSeconds(new Date(), time)
+      return differenceInSeconds(this._end, this._start)
     } catch (e) {
       return 0
     }

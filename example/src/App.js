@@ -8,12 +8,13 @@ const {
   isTimerActive,
   stopTimer,
   startTimer,
+  resetTimer,
   getCurrentTimeInSeconds
 } = new CountdownTimer({
   id: 1,
-  presist: true,
+  // presist: true,
   onTick: (e) => {
-    console.log(e)
+    //console.log(e)
   }
 })
 
@@ -30,12 +31,7 @@ const App = () => {
       />
       <div>{value}</div>
       <div>
-        <button disabled={!isTimerActive} onClick={startTimer}>
-          Start
-        </button>
-        <button disabled={isTimerActive} onClick={stopTimer}>
-          Stop
-        </button>
+        <button onClick={stopTimer}>Stop</button>
         <button onClick={() => setValue(getCurrentTimeInSeconds())}>
           get seconds
         </button>
