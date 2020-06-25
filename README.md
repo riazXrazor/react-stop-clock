@@ -10,6 +10,8 @@
 npm install --save react-stop-clock
 ```
 
+## [Demo](https://riazxrazor.github.io/react-stop-clock/)
+
 ## Usage
 
 ```jsx
