@@ -1,7 +1,7 @@
 {
   "name": "react-stop-clock",
   "version": "1.0.0",
-  "description": "Made with create-react-library",
+  "description": "A simple customizable stop timer for react app with presist in local storage support.",
   "author": "riazxrazor",
   "license": "MIT",
   "repository": "riazxrazor/react-stop-clock",
@@ -49,5 +49,9 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "date-fns": "^2.14.0",
+    "lodash": "^4.17.15"
+  }
 }
